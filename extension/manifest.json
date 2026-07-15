@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Matrix Bridge",
+  "version": "0.1.0",
+  "description": "Bidirectional context sync between Claude and ChatGPT",
+  "permissions": [
+    "scripting",
+    "storage",
+    "activeTab",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "https://claude.ai/*",
+    "https://chat.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://claude.ai/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": ["content-script.js"]
+    }
+  ],
+  "action": {
+    "default_title": "Matrix Bridge",
+    "default_popup": "popup/index.html"
+  }
+}
