@@ -34,6 +34,7 @@ Think of it like a **Matrix-style data bridge** where both LLMs operate as exten
 4. **Approval Queue** - User review UI for sensitive syncs
 5. **CLI Tool** - Manual sync triggers and diagnostics
 6. **Dashboard** - Settings, history, and sync management
+7. **MCP Server** - Standalone stdio MCP server exposing the sync loop as tools, so Claude and ChatGPT can each connect directly (see below)
 
 ### Data Flow
 
@@ -73,6 +74,7 @@ matrix-bridge/
 │   ├── models/             # Data models
 │   ├── sync/               # Sync engine logic
 │   ├── approval/           # Approval queue
+│   ├── mcp_server/         # Standalone MCP server (stdio, SQLite-backed)
 │   └── persistence/        # Vector DB + storage
 ├── extension/              # Browser extension
 │   ├── manifest.json
@@ -119,6 +121,24 @@ cd ../dashboard
 npm install
 npm start  # Runs on http://localhost:3000
 ```
+
+## ChatGPT / Claude MCP Connector
+
+For a working bridge today—without standing up Postgres/Pinecone/Weaviate—use
+the standalone MCP server in `backend/mcp_server/`. It's a stdio MCP server
+backed by local SQLite that exposes the sync loop (`capture_context`,
+`get_context`, `list_projects`, `list_pending_approvals`, `approve_sync`) as
+tools any MCP client can call, including ChatGPT's "Connect to a custom MCP"
+dialog and Claude Desktop/Code.
+
+```bash
+cd backend
+pip install -r mcp_server/requirements.txt
+python3 -m mcp_server
+```
+
+See [docs/CHATGPT_MCP_SETUP.md](./docs/CHATGPT_MCP_SETUP.md) for the exact
+field values to paste into ChatGPT's custom MCP connector form.
 
 ## Configuration
 
@@ -187,6 +207,7 @@ If both LLMs edit the same file simultaneously:
 ## Development Roadmap
 
 - [ ] Backend API scaffold
+- [x] Standalone MCP server for ChatGPT/Claude connectors (stdio + SQLite)
 - [ ] Browser extension (Chrome/Firefox)
 - [ ] Vector DB integration
 - [ ] Approval dashboard
