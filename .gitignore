@@ -60,3 +60,6 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Outlook integration state (token cache, delta links, local mirror)
+.outlook-state/

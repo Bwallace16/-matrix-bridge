@@ -141,6 +141,20 @@ New projects auto-tagged:
 - `"my-project-Claude"` → syncs to GPT as `"my-project-GPT"`
 - Requires user approval on first sync
 
+## Integration Points
+
+### Outlook (Microsoft Graph)
+
+One read-only door into the mailbox, built on delta queries and a local mirror. Pulls calendar and mail, drops anything personal or internal-only before it touches disk, and serves a versioned digest that other systems (a second brain, another agent, a cron job) consume instead of calling Graph themselves.
+
+```bash
+cd backend
+python -m outlook auth      # one-time device-code sign-in
+python -m outlook digest    # last 7 days as JSON
+```
+
+Routes live under `/api/outlook/*`. Setup, schema and the privacy contract: [docs/OUTLOOK.md](./docs/OUTLOOK.md).
+
 ## API Overview
 
 ### Core Endpoints
@@ -186,7 +200,8 @@ If both LLMs edit the same file simultaneously:
 
 ## Development Roadmap
 
-- [ ] Backend API scaffold
+- [x] Backend API scaffold
+- [x] Outlook integration point (Graph delta sync, digest, webhooks)
 - [ ] Browser extension (Chrome/Firefox)
 - [ ] Vector DB integration
 - [ ] Approval dashboard

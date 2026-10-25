@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 
+from outlook.router import router as outlook_router
+
 load_dotenv()
 
 app = FastAPI(
@@ -20,13 +22,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Integration points
+app.include_router(outlook_router)
+
 # Routes (to be implemented)
 @app.get("/")
 def read_root():
     return {
         "message": "Matrix Bridge API",
         "status": "online",
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "integrations": ["outlook"]
     }
 
 @app.get("/health")
